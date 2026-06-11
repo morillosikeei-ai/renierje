@@ -79,14 +79,15 @@ $(document).ready(function () {
                 $.ajax({
                     url: $(this).data('url'),
                     type: 'DELETE',
+                    dataType: 'json',
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    data: 'ids=' + join_selected_values,
+                    data: { ids: join_selected_values },
                     success: function (data) {
-                        if (data['success']) {
+                        if (data.success) {
                             $(".sub_chk:checked").each(function () {
                                 $(this).parents("tr").remove();
                             });
-                            alert(data['success']);
+                            alert(data.success);
                         } else {
                             alert('Something went wrong!');
                         }
@@ -112,11 +113,12 @@ $(document).ready(function () {
         $.ajax({
             url: ele.href,
             type: 'DELETE',
+            dataType: 'json',
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             success: function (data) {
-                if (data['success']) {
-                    $("#" + data['tr']).slideUp("slow");
-                    alert(data['success']);
+                if (data.success) {
+                    $("#" + data.tr).slideUp("slow");
+                    alert(data.success);
                 } else {
                     alert('Something went wrong!');
                 }

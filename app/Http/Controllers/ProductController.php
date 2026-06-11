@@ -27,8 +27,22 @@ class ProductController extends Controller
     // Delete MULTIPLE products (comma-separated IDs)
     public function deleteAll(Request $request)
     {
-        $ids = $request->ids;
-        DB::table("products")->whereIn('id', explode(",", $ids))->delete();
-        return response()->json(['success' => "Products Deleted successfully."]);
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['error' => 'No IDs provided.'], 422);
+        }
+
+        $idArray = array_filter(explode(',', $ids), function ($id) {
+            return trim($id) !== '';
+        });
+
+        if (empty($idArray)) {
+            return response()->json(['error' => 'No valid IDs provided.'], 422);
+        }
+
+        DB::table('products')->whereIn('id', $idArray)->delete();
+
+        return response()->json(['success' => 'Products Deleted successfully.']);
     }
 }
